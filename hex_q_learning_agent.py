@@ -12,6 +12,14 @@ class QLearningAgent:
         self.epsilon = epsilon
         self.q_table = torch.zeros(board_size, board_size, 3)
 
+    def store_transition(self, state, action, reward, next_state, done):
+        self.state = state
+        self.next_state = next_state
+        self.reward = reward
+        self.action = action
+        self.terminal = done
+        return
+
     def choose_action(self, action_space):
         valid_actions = get_valid_actions(action_space)
 

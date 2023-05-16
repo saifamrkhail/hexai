@@ -1,5 +1,6 @@
 # for rl environments
 import gymnasium as gym
+import fhtw_hex
 import minihex
 
 # imports for the neural network
