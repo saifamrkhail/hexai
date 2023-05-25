@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+model.pt
+optimizer.pt
 
 # C extensions
 *.so
@@ -25,6 +27,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+venv
 hexai.code-workspace
 
 # PyInstaller

@@ -91,9 +91,13 @@ class AlphaZero:
             self.model.train()
             for epoch in range(self.args['num_epochs']):
                 self.train(memory)
-            torch.save(self.model.state_dict(), "model.pt")
-            torch.save(self.optimizer.state_dict(), "optimizer.pt")
-
+            
+            if 0 == (iteration % 10):
+                torch.save(self.model.state_dict(), "model_"+ iteration + "_.pt")
+                torch.save(self.optimizer.state_dict(), "optimizer_"+ iteration +"_.pt")
+                if 0 == (iteration % 100):
+                    torch.save(self.model.state_dict(), "modelCheckpoint_"+ iteration/10 + "_.pt")
+                    # ToDo: let modelCheckpoint train against last 10 model iterations and check if better
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
