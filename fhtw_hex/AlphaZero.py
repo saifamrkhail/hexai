@@ -2,9 +2,11 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from random import choices, shuffle
-from MCTS import MCTS
-from Model import ResNet
-import hex_engine
+from fhtw_hex.MCTS import MCTS
+import fhtw_hex.Model as Model
+import fhtw_hex.hex_engine as hex_engine
+
+BOARD_SIZE=7 # ToDo: When algorithm is stable change board size here to 7 for 7x7. Test on 3 (3x3) for quick iterative development
 
 
 class AlphaZero:
@@ -83,34 +85,56 @@ class AlphaZero:
 
     def learn(self):
         for iteration in range(self.args['num_iterations']):
-            print(iteration, "iteration")
+            print(iteration, "### Running Iteration")
             memory = []
             self.model.eval()
             for selfPlay_iteration in range(self.args['num_selfPlay_iterations']):
+                print(selfPlay_iteration, "## Playing Episode/Rollout")
                 memory += self.selfPlay()
             self.model.train()
             for epoch in range(self.args['num_epochs']):
+                print(epoch, "# Epoch/Forward Pass")
                 self.train(memory)
+
+        torch.save(self.model.state_dict(), "../models/model.pt")
+        torch.save(self.optimizer.state_dict(), "../models/optimizer.pt")
             
-            if 0 == (iteration % 10):
-                torch.save(self.model.state_dict(), "model_"+ iteration + "_.pt")
-                torch.save(self.optimizer.state_dict(), "optimizer_"+ iteration +"_.pt")
-                if 0 == (iteration % 100):
-                    torch.save(self.model.state_dict(), "modelCheckpoint_"+ iteration/10 + "_.pt")
-                    # ToDo: let modelCheckpoint train against last 10 model iterations and check if better
+            # # ToDo:
+            # if 0 == (iteration % 10):
+            #     torch.save(self.model.state_dict(), "model_"+ iteration + "_.pt")
+            #     torch.save(self.optimizer.state_dict(), "optimizer_"+ iteration +"_.pt")
+            #     if 0 == (iteration % 100):
+            #         torch.save(self.model.state_dict(), "modelCheckpoint_"+ iteration/10 + "_.pt")
+            #        # ToDo: let modelCheckpoint train against last 10 model iterations and check if better
+
+def machine(board, action_set):
+
+    # ToDo:
+    # This is the wrapper method for using it in "hex_play.py". should basically be a predict() method using the model.
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    game = hex_engine.hexPosition(size=BOARD_SIZE)
+    model = Model.ResNet(game, 4, 64, device)
+    model.load_state_dict(torch.load("models/model.pt"))
+    model.eval()
+
+    action = model(board)
+    action = (0, 0)
+    # eval the current "board" state given by engine and choose an action from the possible moves ("action_set")
+    # and return the chosen action in tuple format (0, 0) = 'A1'.
+    return action
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    game = hex_engine.hexPosition(size=3)
-    model = ResNet(game, 4, 64, device)
+    game = hex_engine.hexPosition(size=BOARD_SIZE) 
+    model = Model.ResNet(game, 4, 64, device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
     args = {
         'C': 2,
         'num_searches': 60,
-        'num_iterations': 5,
-        'num_selfPlay_iterations': 20,
-        'num_epochs': 5,
-        'batch_size': 10,
+        'num_iterations': 1,
+        'num_selfPlay_iterations': 1,
+        'num_epochs': 1,
+        'batch_size': 50,
         'temperature': 1.25,
         'dirichlet_epsilon': 0.25,
         'dirichlet_alpha': 0.3
