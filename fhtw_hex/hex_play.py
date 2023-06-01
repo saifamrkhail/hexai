@@ -3,7 +3,7 @@ import sys
 sys.path.append("/home/sharwin/Desktop/")
 
 #importing the module
-from fhtw_hex import hex_engine as engine
+import hex_engine as engine
 
 #initializing a game object
 game = engine.hexPosition()
@@ -12,11 +12,11 @@ game = engine.hexPosition()
 #game.human_vs_machine(human_player=-1, machine=None)
 
 #this is how you will provide the agent you generate during the group project
-from fhtw_hex import example as eg
+import example as eg
 
 #play the game against the example agent, human play 'white'
 #game.human_vs_machine(human_player=1, machine=eg.machine)
 
-import fhtw_hex.AlphaZero as az
+import AlphaZero as az
 
 game.human_vs_machine(human_player=1, machine=az.machine)

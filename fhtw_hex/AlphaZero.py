@@ -2,11 +2,11 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from random import choices, shuffle
-from fhtw_hex.MCTS import MCTS
-import fhtw_hex.Model as Model
-import fhtw_hex.hex_engine as hex_engine
+from MCTS import MCTS
+import Model as Model
+import hex_engine as hex_engine
 
-BOARD_SIZE=7 # ToDo: When algorithm is stable change board size here to 7 for 7x7. Test on 3 (3x3) for quick iterative development
+BOARD_SIZE=2 # ToDo: When algorithm is stable change board size here to 7 for 7x7. Test on 3 (3x3) for quick iterative development
 
 
 class AlphaZero:
@@ -96,8 +96,8 @@ class AlphaZero:
                 print(epoch, "# Epoch/Forward Pass")
                 self.train(memory)
 
-        torch.save(self.model.state_dict(), "../models/model.pt")
-        torch.save(self.optimizer.state_dict(), "../models/optimizer.pt")
+        torch.save(self.model.state_dict(), "models/model.pt")
+        torch.save(self.optimizer.state_dict(), "models/optimizer.pt")
             
             # # ToDo:
             # if 0 == (iteration % 10):
@@ -117,7 +117,7 @@ def machine(board, action_set):
     model.load_state_dict(torch.load("models/model.pt"))
     model.eval()
 
-    action = model(board)
+    action = model()
     action = (0, 0)
     # eval the current "board" state given by engine and choose an action from the possible moves ("action_set")
     # and return the chosen action in tuple format (0, 0) = 'A1'.
@@ -131,9 +131,9 @@ if __name__ == "__main__":
     args = {
         'C': 2,
         'num_searches': 60,
-        'num_iterations': 1,
-        'num_selfPlay_iterations': 1,
-        'num_epochs': 1,
+        'num_iterations': 5,
+        'num_selfPlay_iterations': 10,
+        'num_epochs': 3,
         'batch_size': 50,
         'temperature': 1.25,
         'dirichlet_epsilon': 0.25,
