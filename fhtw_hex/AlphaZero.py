@@ -1,14 +1,12 @@
 import numpy as np
 import torch
 import torch.nn.functional as F
-from random import choices, shuffle
+from random import shuffle
 from MCTS import MCTS
 import Model as Model
 import hex_engine as hex_engine
-import agent as AI
 
-BOARD_SIZE=3 # ToDo: When algorithm is stable change board size here to 7 for 7x7. Test on 3 (3x3) for quick iterative development
-
+BOARD_SIZE=3
 
 class AlphaZero:
     def __init__(self, model, game, optimizer, args):
@@ -84,43 +82,56 @@ class AlphaZero:
             optimizer.step()
 
     def learn(self):
-        for iteration in range(self.args['num_iterations']):
-            print(iteration, "### Running Iteration")
+
+        for cycle in range(self.args['num_cycles']):
+            print("### Running Training Cycle {} ###".format(cycle+1))
             memory = []
+
             self.model.eval()
-            for selfPlay_iteration in range(self.args['num_selfPlay_iterations']):
-                print(selfPlay_iteration, "## Playing Episode/Rollout")
+            print("## Playing Episodes / Generating Rollouts ##")
+            for episodes in range(self.args['num_episodes']):
+                print("# Episode {} #".format(episodes+1))
                 memory += self.selfPlay()
+
             self.model.train()
+            print("## Forward Passes / Epochs ##")
             for epoch in range(self.args['num_epochs']):
-                print(epoch, "# Epoch/Forward Pass")
+                print("# Epoch/Forward Pass {} #" .format(epoch+1))
                 self.train(memory)
 
-        torch.save(self.model.state_dict(), "models/model.pt")
-        torch.save(self.optimizer.state_dict(), "models/optimizer.pt")
+            if 0 == (cycle % 10): # "10" is arbitrary change if need be
+                torch.save(self.model.state_dict(), "models/model_"+str(cycle)+"_Checkpoint.pt")
+                # ToDo: 
+                # Let modelCheckpoint train against last 5~ model cycles and  
+                # if better: print("### Model improved ###") and continue training cycles.
+                # if not better: reject model, load last checkpoint model 
+                # "cycle -= 10", " *adjust exploratory hyper parameter* ", 
+                # load older checkpoint self.model.load_state_dict(torch.load("models/model_"+str(cycle)+"_Checkpoint.pt")
+                # and resume/repeat training/overwrite last few models --> continue.
+                # If it fails any arbitrary amount of times or finishes all cycles, stop training and save last model.
 
-        #game.machine_vs_machine(machine1=AI.machine, machine2=AI.machine)
-            
-            # # ToDo:
-            # if 0 == (iteration % 10):
-            #     torch.save(self.model.state_dict(), "model_"+ iteration + "_.pt")
-            #     torch.save(self.optimizer.state_dict(), "optimizer_"+ iteration +"_.pt")
-            #     if 0 == (iteration % 100):
-            #         torch.save(self.model.state_dict(), "modelCheckpoint_"+ iteration/10 + "_.pt")
-            #        # ToDo: let modelCheckpoint train against last 10 model iterations and check if better
+                # if rejected_cnt > 5:
+                #     break
+
+            elif 0 == (cycle % 2):# "2" is arbitrary change if need be
+                torch.save(self.model.state_dict(), "models/model_"+str(cycle)+".pt")
+        
+        torch.save(self.model.state_dict(), "models/model_Last.pt")
+        
+        print("### Training finished - Agent saved as models/model_Last.pt ###")
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     game = hex_engine.hexPosition(size=BOARD_SIZE) 
-    model = Model.ResNet(game, 4, 64, device) # ToDo: "64" needs to be changed with board size i think
+    model = Model.ResNet(game, 4, 64, device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
     args = {
         'C': 2,
         'num_searches': 60,
-        'num_iterations': 2,
-        'num_selfPlay_iterations': 10,
+        'num_cycles': 4,
+        'num_episodes': 10,
         'num_epochs': 3,
-        'batch_size': 50,
+        'batch_size': 50, # sollte mehr als die Anzahl der Episoden entsprechen (= num_episodes)
         'temperature': 1.25,
         'dirichlet_epsilon': 0.25,
         'dirichlet_alpha': 0.3
