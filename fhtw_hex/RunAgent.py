@@ -11,7 +11,7 @@ def machine(board, action_set):
         game = hex_engine.hexPosition(size=BOARD_SIZE) 
         chosen_action_set = game.get_action_space()
         loaded_model = Model.ResNet(game, 4, 64, device)
-        loaded_model.load_state_dict(torch.load("models/model_Last.pt"))
+        loaded_model.load_state_dict(torch.load("models/AZagent.pt"))
 
         board = np.array(board)
         board = np.stack((board == 1, board == 0, board == -1)).astype(np.float32)
