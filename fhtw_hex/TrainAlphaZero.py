@@ -99,26 +99,33 @@ class AlphaZero:
                 print("# Epoch/Forward Pass {} #" .format(epoch+1))
                 self.train(memory)
 
-            if 0 == (cycle % 10): # "10" is arbitrary change if need be
+            if 0 == (cycle % 10): # muss nicht 10 sein
+                print("### Saving Checkpoint model {} ###" .format(cycle))
                 torch.save(self.model.state_dict(), "models/model_"+str(cycle)+"_Checkpoint.pt")
                 # ToDo: 
-                # Let modelCheckpoint train against last 5~ model cycles and  
-                # if better: print("### Model improved ###") and continue training cycles.
-                # if not better: reject model, load last checkpoint model 
-                # "cycle -= 10", " *adjust exploratory hyper parameter* ", 
-                # load older checkpoint self.model.load_state_dict(torch.load("models/model_"+str(cycle)+"_Checkpoint.pt")
-                # and resume/repeat training/overwrite last few models --> continue.
-                # If it fails any arbitrary amount of times or finishes all cycles, stop training and save last model.
 
-                # if rejected_cnt > 5:
+                # Let modelCheckpoint train against last previous model cycles and
+
+                # if better: print("### Model improved ###") and continue training cycles.
+                # and output improvement statistics + graphs (e.g. winrate)
+
+                # if not better: reject model, 
+                # "cycle -= 10~, model_rejected_cnt+=1", " *adjust exploratory hyper parameter* ", 
+                # load last/older checkpoint model self.model.load_state_dict(torch.load("models/model_"+str(cycle)+"_Checkpoint.pt")
+                # and resume/repeat training/overwrite last 10~ models --> continue.
+
+                # If not better any arbitrary amount of times or finishes all cycles, stop training and save last model.
+                # if model_rejected_cnt > 5:
+                #     print("### Finishing training as model fails to improve winrate ###")
                 #     break
 
-            elif 0 == (cycle % 2):# "2" is arbitrary change if need be
+
+            else:
                 torch.save(self.model.state_dict(), "models/model_"+str(cycle)+".pt")
         
-        torch.save(self.model.state_dict(), "models/model_Last.pt")
+        torch.save(self.model.state_dict(), "models/AZagent.pt")
         
-        print("### Training finished - Agent saved as models/model_Last.pt ###")
+        print("### Training finished after {} cycles - Agent saved as models/AZagent.pt ###" .format(cycle))
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

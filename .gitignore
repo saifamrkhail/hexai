@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 model.pt
 optimizer.pt
+fhtw_hex/models/model_*
 
 # C extensions
 *.so
