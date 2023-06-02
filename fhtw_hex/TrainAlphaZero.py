@@ -106,6 +106,7 @@ class AlphaZero:
 
                 # Let modelCheckpoint train against last previous model cycles and  
                 # if better: print("### Model improved ###") and continue training cycles.
+                # and output improvement statistics + graphs (e.g. winrate)
 
                 # if not better: reject model, 
                 # "cycle -= 10, model_rejected_cnt+=1", " *adjust exploratory hyper parameter* ", 
