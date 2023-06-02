@@ -5,8 +5,9 @@ from random import choices, shuffle
 from MCTS import MCTS
 import Model as Model
 import hex_engine as hex_engine
+import agent as AI
 
-BOARD_SIZE=2 # ToDo: When algorithm is stable change board size here to 7 for 7x7. Test on 3 (3x3) for quick iterative development
+BOARD_SIZE=3 # ToDo: When algorithm is stable change board size here to 7 for 7x7. Test on 3 (3x3) for quick iterative development
 
 
 class AlphaZero:
@@ -29,7 +30,6 @@ class AlphaZero:
                 player = -1
 
             action_probs = self.mcts.search()
-
             state = np.array(self.game.board)
             memory.append((np.stack((state == 1, state == 0, state == -1)).astype(np.float32), action_probs, player))
 
@@ -98,6 +98,8 @@ class AlphaZero:
 
         torch.save(self.model.state_dict(), "models/model.pt")
         torch.save(self.optimizer.state_dict(), "models/optimizer.pt")
+
+        #game.machine_vs_machine(machine1=AI.machine, machine2=AI.machine)
             
             # # ToDo:
             # if 0 == (iteration % 10):
@@ -107,31 +109,15 @@ class AlphaZero:
             #         torch.save(self.model.state_dict(), "modelCheckpoint_"+ iteration/10 + "_.pt")
             #        # ToDo: let modelCheckpoint train against last 10 model iterations and check if better
 
-def machine(board, action_set):
-
-    # ToDo:
-    # This is the wrapper method for using it in "hex_play.py". should basically be a predict() method using the model.
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    game = hex_engine.hexPosition(size=BOARD_SIZE)
-    model = Model.ResNet(game, 4, 64, device)
-    model.load_state_dict(torch.load("models/model.pt"))
-    model.eval()
-
-    action = model()
-    action = (0, 0)
-    # eval the current "board" state given by engine and choose an action from the possible moves ("action_set")
-    # and return the chosen action in tuple format (0, 0) = 'A1'.
-    return action
-
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     game = hex_engine.hexPosition(size=BOARD_SIZE) 
-    model = Model.ResNet(game, 4, 64, device)
+    model = Model.ResNet(game, 4, 64, device) # ToDo: "64" needs to be changed with board size i think
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
     args = {
         'C': 2,
         'num_searches': 60,
-        'num_iterations': 5,
+        'num_iterations': 2,
         'num_selfPlay_iterations': 10,
         'num_epochs': 3,
         'batch_size': 50,
