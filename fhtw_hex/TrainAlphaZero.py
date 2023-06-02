@@ -99,22 +99,24 @@ class AlphaZero:
                 print("# Epoch/Forward Pass {} #" .format(epoch+1))
                 self.train(memory)
 
-            if 0 == (cycle % 10):
+            if 0 == (cycle % 10): # muss nicht 10 sein
                 print("### Saving Checkpoint model {} ###" .format(cycle))
                 torch.save(self.model.state_dict(), "models/model_"+str(cycle)+"_Checkpoint.pt")
                 # ToDo: 
 
-                # Let modelCheckpoint train against last previous model cycles and  
+                # Let modelCheckpoint train against last previous model cycles and
+
                 # if better: print("### Model improved ###") and continue training cycles.
                 # and output improvement statistics + graphs (e.g. winrate)
 
                 # if not better: reject model, 
-                # "cycle -= 10, model_rejected_cnt+=1", " *adjust exploratory hyper parameter* ", 
+                # "cycle -= 10~, model_rejected_cnt+=1", " *adjust exploratory hyper parameter* ", 
                 # load last/older checkpoint model self.model.load_state_dict(torch.load("models/model_"+str(cycle)+"_Checkpoint.pt")
                 # and resume/repeat training/overwrite last 10~ models --> continue.
+
                 # If not better any arbitrary amount of times or finishes all cycles, stop training and save last model.
                 # if model_rejected_cnt > 5:
-                #     print("### Training finished as model doesnt improve after {} cycles- Agent saved as models/AZagent.pt ###" .format(cycle))
+                #     print("### Finishing training as model fails to improve winrate ###")
                 #     break
 
 
