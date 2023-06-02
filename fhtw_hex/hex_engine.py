@@ -244,7 +244,7 @@ class hexPosition (object):
                         break
                 self.moove(human_input)
             else:
-                chosen = machine(self.board, possible_actions)
+                chosen = machine(board=self.board, action_set=possible_actions)
                 self.moove(chosen)
             if self.winner == 1:
                 self.print()
