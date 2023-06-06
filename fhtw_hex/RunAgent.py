@@ -2,6 +2,9 @@ import numpy as np
 import torch
 import Model as Model
 import hex_engine as hex_engine
+import StatisticGen
+
+
 
 BOARD_SIZE=3
 
@@ -11,7 +14,7 @@ def machine(board, action_set):
         game = hex_engine.hexPosition(size=BOARD_SIZE) 
         chosen_action_set = game.get_action_space()
         loaded_model = Model.ResNet(game, 4, 64, device)
-        loaded_model.load_state_dict(torch.load("models/AZagent.pt"))
+        loaded_model.load_state_dict(torch.load(StatisticGen.MODEL_PATH))
 
         board = np.array(board)
         board = np.stack((board == 1, board == 0, board == -1)).astype(np.float32)

@@ -6,7 +6,8 @@ from MCTS import MCTS
 import Model as Model
 import hex_engine as hex_engine
 
-BOARD_SIZE=3
+BOARD_SIZE=5
+CYCLES=40
 
 class AlphaZero:
     def __init__(self, model, game, optimizer, args):
@@ -101,7 +102,7 @@ class AlphaZero:
 
             if 0 == (cycle % 10): # muss nicht 10 sein
                 print("### Saving Checkpoint model {} ###" .format(cycle))
-                torch.save(self.model.state_dict(), "models/model_"+str(cycle)+"_Checkpoint.pt")
+                torch.save(self.model.state_dict(), "models/model_"+str(cycle)+".pt")
                 # ToDo: 
 
                 # Let modelCheckpoint train against last previous model cycles and
@@ -141,7 +142,7 @@ if __name__ == "__main__":
     args = {
         'C': 2,
         'num_searches': 60,
-        'num_cycles': 40,
+        'num_cycles': CYCLES,
         'num_episodes': 50,
         'num_epochs': 13,
         'batch_size': 50, # sollte mehr als die Anzahl der Episoden entsprechen (= num_episodes)
