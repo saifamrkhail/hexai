@@ -12,10 +12,12 @@ wins=0
 losses=0
 draws=0
 
-
 #TEST
 for i in range(100):
-    game.machine_vs_machine(machine1=lambda board, action_set: AI(board, action_set, modelPath = "models/model_39.pt"), machine2=lambda board, action_set: AI(board, action_set, modelPath = "models/model_20.pt"))
+    #game.machine_vs_machine(machine1=lambda board, action_set: AI(board, action_set, modelPath = "models/model_2.pt"), machine2=lambda board, action_set: AI(board, action_set, modelPath = "models/model_0.pt"))
+    game.machine_vs_machine(machine1=lambda board, action_set: AI(board, action_set, modelPath = "models/model_0.pt"), machine2=None)
+    
+    
     if(game.winner == 1):
         wins += 1
     elif(game.winner == -1):

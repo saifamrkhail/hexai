@@ -9,14 +9,14 @@ def statistics():
     global modelPath
     results=[]
     game=hex_engine.hexPosition(size=taz.BOARD_SIZE) 
-    for i in range(0,taz.CYCLES-1): #TODO 9 sollte CYCLES sein
+    for i in range(0,taz.CYCLES): #TODO 9 sollte CYCLES sein
         modelPath = "models/model_"+ str(i) +".pt"
         print("######### MODEL = #", i)
         wins=0
         losses=0
         draws=0
 
-        for j in range(10):
+        for j in range(100):
             game.machine_vs_machine(machine1=lambda board, action_set: machine(board, action_set, modelPath), machine2=None)
             if(game.winner == 1):
                 wins += 1
@@ -24,7 +24,7 @@ def statistics():
                 losses += 1
             else:
                 draws += 1
-                
+
         results.append([i,wins,losses,draws])
 
     print("Results of Model = #",results)
