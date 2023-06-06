@@ -44,13 +44,22 @@ def machine(board, action_set, modelPath="models/AZagent.pt"):
     loaded_model.eval()
     out_policy, _ = loaded_model(state)
     action_index = np.argmax(out_policy.detach().numpy())
-    
-    while chosen_action_set[action_index] not in action_set:
-        out_policy[0][action_index] = -1
-        action_index = np.argmax(out_policy.detach().numpy())
 
-    #print("valid action chosen: ", chosen_action_set[action_index])
+    max_attempts = taz.BOARD_SIZE ** 2
+    attempts = 0
+
+    while chosen_action_set[action_index] not in action_set and attempts < max_attempts:
+        out_policy[0][action_index] = -99
+        action_index = np.argmax(out_policy.detach().numpy())
+        attempts += 1
+
+    if chosen_action_set[action_index] not in action_set:
+        # No valid actions found
+        return None
+    
     return chosen_action_set[action_index]
+
+
 
 if __name__ == "__main__":
     statistics()
