@@ -22,7 +22,7 @@ def statistics():
             elif(game.winner == -1):
                 losses += 1
 
-        results.append([str(i)+"# Model",wins,losses])
+        results.append(["#"+str(i)+" Model",wins,losses])
 
     print("Results:\n",results)
 
