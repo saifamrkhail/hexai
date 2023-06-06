@@ -132,17 +132,24 @@ if __name__ == "__main__":
     game = hex_engine.hexPosition(size=BOARD_SIZE) 
     model = Model.ResNet(game, 4, 64, device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
+    
+    #Aber sie haben mit diesen hyperparametern trainiert:
+    #80 iterations
+    #100 episoden
+    #25 MCTS (epochen)
+
     args = {
         'C': 2,
         'num_searches': 60,
-        'num_cycles': 4,
-        'num_episodes': 10,
-        'num_epochs': 3,
+        'num_cycles': 40,
+        'num_episodes': 50,
+        'num_epochs': 13,
         'batch_size': 50, # sollte mehr als die Anzahl der Episoden entsprechen (= num_episodes)
         'temperature': 1.25,
         'dirichlet_epsilon': 0.25,
         'dirichlet_alpha': 0.3
     }
+
 
     alphaZero = AlphaZero(model, game, optimizer, args)
     alphaZero.learn()
