@@ -6,8 +6,8 @@ from MCTS import MCTS
 import Model as Model
 import hex_engine as hex_engine
 
-BOARD_SIZE=5
-CYCLES=40
+BOARD_SIZE=5 #Size of the board for TRAINING AND PLAYING
+CYCLES=5 #How many models are being generated (with "AZagent.pt" being the final model)
 
 class AlphaZero:
     def __init__(self, model, game, optimizer, args):
