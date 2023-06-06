@@ -133,7 +133,7 @@ if __name__ == "__main__":
     model = Model.ResNet(game, 4, 64, device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
     
-    #Aber sie haben mit diesen hyperparametern trainiert:
+    #finale parameter zum trainieren
     #80 iterations
     #100 episoden
     #25 MCTS (epochen)

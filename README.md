@@ -5,4 +5,3 @@
 
 - To train a model, which will be saved into "models/AZagent.pt", run "py TrainAlphaZero.py"
 - To play against the model, run "py PlayGame.py"
-
