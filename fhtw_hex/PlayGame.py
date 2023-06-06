@@ -1,9 +1,9 @@
 import Model as Model
 import hex_engine as hex_engine
 from StatisticGen import machine as AI
+import TrainAlphaZero as taz
 
-BOARD_SIZE=3
-game = hex_engine.hexPosition(size=BOARD_SIZE)
+game = hex_engine.hexPosition(size=taz.BOARD_SIZE)
 
 #play against the machine
 #game.human_vs_machine(human_player=1, machine=AI.machine)

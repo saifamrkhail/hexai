@@ -7,7 +7,7 @@ import Model as Model
 import hex_engine as hex_engine
 
 BOARD_SIZE=5 #Size of the board for TRAINING AND PLAYING
-CYCLES=5 #How many models are being generated (with "AZagent.pt" being the final model)
+CYCLES=3 #How many models are being generated (with "AZagent.pt" being the final model)
 
 class AlphaZero:
     def __init__(self, model, game, optimizer, args):
@@ -119,7 +119,6 @@ class AlphaZero:
                 # if model_rejected_cnt > 5:
                 #     print("### Finishing training as model fails to improve winrate ###")
                 #     break
-
 
             else:
                 torch.save(self.model.state_dict(), "models/model_"+str(cycle)+".pt")
