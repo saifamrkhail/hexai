@@ -9,12 +9,11 @@ def statistics():
     global modelPath
     results=[]
     game=hex_engine.hexPosition(size=taz.BOARD_SIZE) 
-    for i in range(0,taz.CYCLES): #TODO 9 sollte CYCLES sein
+    for i in range(0,taz.CYCLES):
         modelPath = "models/model_"+ str(i) +".pt"
         print("######### MODEL = #", i)
         wins=0
         losses=0
-        draws=0
 
         for j in range(100):
             game.machine_vs_machine(machine1=lambda board, action_set: machine(board, action_set, modelPath), machine2=None)
@@ -22,12 +21,10 @@ def statistics():
                 wins += 1
             elif(game.winner == -1):
                 losses += 1
-            else:
-                draws += 1
 
-        results.append([i,wins,losses,draws])
+        results.append([str(i)+"# Model",wins,losses])
 
-    print("Results of Model = #",results)
+    print("Results:\n",results)
 
 def machine(board, action_set, modelPath="models/AZagent.pt"):
     

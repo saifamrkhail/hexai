@@ -7,7 +7,7 @@ import Model as Model
 import hex_engine as hex_engine
 
 BOARD_SIZE=5 #Size of the board for TRAINING AND PLAYING
-CYCLES=3 #How many models are being generated (with "AZagent.pt" being the final model)
+CYCLES=8 #How many models are being generated (with "AZagent.pt" being the final model)
 
 class AlphaZero:
     def __init__(self, model, game, optimizer, args):
