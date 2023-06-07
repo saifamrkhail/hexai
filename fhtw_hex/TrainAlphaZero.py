@@ -6,8 +6,8 @@ from MCTS import MCTS
 import Model as Model
 import hex_engine as hex_engine
 
-BOARD_SIZE=5 #Size of the board for TRAINING AND PLAYING
-CYCLES=10 #How many models are being generated (with "AZagent.pt" being the final model)
+BOARD_SIZE=7 #Size of the board for TRAINING AND PLAYING
+CYCLES=100 #How many models are being generated (with "AZagent.pt" being the final model)
 
 class AlphaZero:
     def __init__(self, model, game, optimizer, args):
@@ -142,8 +142,8 @@ if __name__ == "__main__":
         'C': 2,
         'num_searches': 60,
         'num_cycles': CYCLES,
-        'num_episodes': 50,
-        'num_epochs': 13,
+        'num_episodes': 100,
+        'num_epochs': 25,
         'batch_size': 50, # sollte mehr als die Anzahl der Episoden entsprechen (= num_episodes)
         'temperature': 1.25,
         'dirichlet_epsilon': 0.25,
